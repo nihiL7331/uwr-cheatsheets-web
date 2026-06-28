@@ -8,6 +8,10 @@ from .forms import NoteUploadForm, Note
 from django.db.models import Prefetch
 
 
+def landing(req):
+    return render(req, "uwr_cheatsheets/landing.html")
+
+
 def course_list(req):
     courses = Course.objects.order_by("name")
     return render(req, "uwr_cheatsheets/course_list.html", {"courses": courses})

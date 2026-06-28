@@ -1,0 +1,18 @@
+{% extends "uwr_cheatsheets/base.html" %}
+
+{% block title %}UWr Cheatsheets - studenckie notatki{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero__inner">
+        <p class="hero__eyebrow">UWr Cheatsheets</p>
+        <h1 class="hero__title">Od studentów dla studentów.</h1>
+        <div class="hero__actions">
+            <a class="btn btn--primary" href="{% url 'uwr_cheatsheets:course_list' %}">Przeglądaj notatki</a>
+            {% if not user.is_authenticated %}
+            <a class="btn btn--ghost" href="{% url 'uwr_cheatsheets:register' %}">Dołącz</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
