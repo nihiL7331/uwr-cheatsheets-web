@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Course, CourseRun
+from django.contrib.auth.decorators import login_required
 
 
 def course_list(req):
@@ -19,3 +20,8 @@ def course_detail(req, pk):
         "uwr_cheatsheets/course_detail.html",
         {"course": course, "runs": runs},
     )
+
+
+@login_required
+def upload_note(req):
+    return render(req, "uwr_cheatsheets/upload_note.html")

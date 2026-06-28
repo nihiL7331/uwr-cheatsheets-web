@@ -6,4 +6,5 @@ app_name = "uwr_cheatsheets"
 urlpatterns = [
     path("", views.course_list, name="course_list"),
     path("course/<int:pk>/", views.course_detail, name="course_detail"),
+    path("upload/", views.upload_note, name="upload_note"),
 ]

@@ -8,6 +8,18 @@
 <body>
     <header>
         <h1><a href="{% url 'uwr_cheatsheets:course_list' %}">UWr Cheatsheets</a></h1>
+        <nav>
+                {% if user.is_authenticated %}
+                    <span>{{ user.username }}</span>
+                    <a href="{% url 'uwr_cheatsheets:upload_note' %}">Dodaj notatkę</a>
+                    <form method="post" action="{% url 'logout' %}" style="display:inline">
+                        {% csrf_token %}
+                        <button type="submit">Wyloguj</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Zaloguj</a>
+                {% endif %}
+            </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
