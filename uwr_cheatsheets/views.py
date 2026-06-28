@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, CourseRun
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 
 def course_list(req):
@@ -25,3 +27,15 @@ def course_detail(req, pk):
 @login_required
 def upload_note(req):
     return render(req, "uwr_cheatsheets/upload_note.html")
+
+
+def register(req):
+    if req.method == "POST":
+        form = UserCreationForm(req.POST)
+        if form.is_valid():
+            user = form.save()
+            login(req, user)
+            return redirect("uwr_cheatsheets:course_list")
+    else:
+        form = UserCreationForm()
+    return render(req, "registration/register.html", {"form": form})

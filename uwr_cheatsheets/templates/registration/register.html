@@ -1,0 +1,12 @@
+{% extends "uwr_cheatsheets/base.html" %}
+
+{% block title %}Rejestracja - UWr Cheatsheets{% endblock %}
+
+{% block content %}
+<h2>Rejestracja</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Zarejestruj się</button>
+</form>
+{% endblock %}
