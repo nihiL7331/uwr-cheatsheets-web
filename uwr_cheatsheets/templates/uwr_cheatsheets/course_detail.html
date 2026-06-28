@@ -1,0 +1,34 @@
+{% extends "uwr_cheatsheets/base.html" %}
+
+{% block title %}{{ course.name }} - UWr Cheatsheets{% endblock %}
+
+{% block content %}
+<p><a href="{% url 'uwr_cheatsheets:course_list' %}"> <- Wszystkie przedmioty</a></p>
+
+<h2>{{ course.name }}</h2>
+
+{% for run in runs %}
+<section>
+    <h3>{{ run.year_start }}/{{ run.year_start|add:1 }} - semestr {{ run.get_term_display }}</h3>
+    {% if run.notes.all %}
+    <ul>
+        {% for note in run.notes.all %}
+        <li>
+            <a href="{{ note.pdf.url }}">{{ note.title }}</a>
+            {% if note.lecture_from %}
+            (wykłady {{ note.lecture_from }}
+                {% if note.lecture_to and note.lecture_to != note.lecture_from %}
+                    - {{ note.lecture_to }}{% endif %})
+            {% endif %}
+            {% if note.author %}- {{ note.author }}{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Brak notatek dla tego cyklu.</p>
+    {% endif %}
+</section>
+{% empty %}
+<p>Brak cykli dla tego przedmiotu.</p>
+{% endfor %}
+{% endblock %}
