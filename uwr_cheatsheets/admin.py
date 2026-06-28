@@ -28,16 +28,23 @@ class CourseRunAdmin(admin.ModelAdmin):
     inlines = [NoteInline]
 
 
+@admin.action(description="Zatwierdź wybrane notatki")
+def approve_notes(modeladmin, req, queryset):
+    updated = queryset.update(status=Note.Status.APPROVED)
+    modeladmin.message_user(req, f"Zatwierdzono {updated} notatek.")
+
+
 @admin.register(Note)
 class NoteAdmin(admin.ModelAdmin):
     list_display = (
         "title",
         "run",
-        "lecture_from",
-        "lecture_to",
+        "status",
         "author",
+        "uploaded_by",
         "uploaded_at",
     )
-    list_filter = ("run__term", "run__course")
+    list_filter = ("status", "run__term", "run__course")
     search_fields = ("title", "author", "run__course__name")
-    ordering = ("run", "lecture_from")
+    ordering = ("status", "run", "lecture_from")
+    actions = [approve_notes]

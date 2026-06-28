@@ -1,6 +1,11 @@
 from django.db import models
 from django.db.models import Q, F
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.conf import settings
+from django.core.validators import (
+    MinValueValidator,
+    MaxValueValidator,
+    FileExtensionValidator,
+)
 
 
 class Course(models.Model):
@@ -26,16 +31,34 @@ class CourseRun(models.Model):
 
 
 class Note(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Oczekująca"
+        APPROVED = "approved", "Zatwierdzona"
+        REJECTED = "rejected", "Odrzucona"
+
     run = models.ForeignKey(CourseRun, on_delete=models.CASCADE, related_name="notes")
     title = models.CharField(max_length=200)
     lecture_from = models.PositiveSmallIntegerField(null=True, blank=True)
     lecture_to = models.PositiveSmallIntegerField(null=True, blank=True)
-    pdf = models.FileField(upload_to="notes_pdfs/")
+    pdf = models.FileField(
+        upload_to="notes_pdfs/", validators=[FileExtensionValidator(["pdf"])]
+    )
     author = models.CharField(max_length=100, blank=True)
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.PENDING
+    )
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="uploaded_notes",
+    )
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["lecture_from", "title"]
+        permissions = [("can_publish_directly", "Może publikować bez moderacji")]
         constraints = [
             models.CheckConstraint(
                 condition=Q(lecture_to__gte=F("lecture_from")),
