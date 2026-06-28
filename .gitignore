@@ -4,3 +4,5 @@ uwr_cheatsheets/migrations/__pycache__
 uwr_cheatsheets_web/__pycache__
 db.sqlite3
 config/__pycache__
+notes/__pycache__
+notes/migrations/__pycache__
