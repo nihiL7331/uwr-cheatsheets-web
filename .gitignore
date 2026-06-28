@@ -2,3 +2,4 @@ media/notes_pdfs
 uwr_cheatsheets/__pycache__
 uwr_cheatsheets/migrations/__pycache__
 uwr_cheatsheets_web/__pycache__
+db.sqlite3
