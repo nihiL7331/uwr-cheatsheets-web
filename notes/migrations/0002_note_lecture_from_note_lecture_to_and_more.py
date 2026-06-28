@@ -4,24 +4,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('uwr_cheatsheets', '0001_initial'),
+        ("notes", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='note',
-            name='lecture_from',
+            model_name="note",
+            name="lecture_from",
             field=models.PositiveSmallIntegerField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='note',
-            name='lecture_to',
+            model_name="note",
+            name="lecture_to",
             field=models.PositiveSmallIntegerField(blank=True, null=True),
         ),
         migrations.AddConstraint(
-            model_name='note',
-            constraint=models.CheckConstraint(condition=models.Q(('lecture_to__gte', models.F('lecture_from'))), name='lecture_to_gte_from'),
+            model_name="note",
+            constraint=models.CheckConstraint(
+                condition=models.Q(("lecture_to__gte", models.F("lecture_from"))),
+                name="lecture_to_gte_from",
+            ),
         ),
     ]

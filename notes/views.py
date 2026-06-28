@@ -9,12 +9,12 @@ from django.db.models import Prefetch
 
 
 def landing(req):
-    return render(req, "uwr_cheatsheets/landing.html")
+    return render(req, "notes/landing.html")
 
 
 def course_list(req):
     courses = Course.objects.order_by("name")
-    return render(req, "uwr_cheatsheets/course_list.html", {"courses": courses})
+    return render(req, "notes/course_list.html", {"courses": courses})
 
 
 def course_detail(req, pk):
@@ -27,7 +27,7 @@ def course_detail(req, pk):
     )
     return render(
         req,
-        "uwr_cheatsheets/course_detail.html",
+        "notes/course_detail.html",
         {"course": course, "runs": runs},
     )
 
@@ -39,17 +39,17 @@ def upload_note(req):
         if form.is_valid():
             note = form.save(commit=False)
             note.uploaded_by = req.user
-            if req.user.has_perm("uwr_cheatsheets.can_publish_directly"):
+            if req.user.has_perm("notes.can_publish_directly"):
                 note.status = Note.Status.APPROVED
                 messages.success(req, "Notatka opublikowana.")
             else:
                 note.status = Note.Status.PENDING
                 messages.success(req, "Notatka oczekuje na zatwierdzenie.")
             note.save()
-            return redirect("uwr_cheatsheets:course_detail", pk=note.run.course.pk)
+            return redirect("notes:course_detail", pk=note.run.course.pk)
     else:
         form = NoteUploadForm()
-    return render(req, "uwr_cheatsheets/upload_note.html", {"form": form})
+    return render(req, "notes/upload_note.html", {"form": form})
 
 
 def register(req):
@@ -58,7 +58,7 @@ def register(req):
         if form.is_valid():
             user = form.save()
             login(req, user)
-            return redirect("uwr_cheatsheets:course_list")
+            return redirect("notes:course_list")
     else:
         form = UserCreationForm()
     return render(req, "registration/register.html", {"form": form})

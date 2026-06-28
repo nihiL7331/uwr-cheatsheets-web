@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('uwr_cheatsheets', '0002_note_lecture_from_note_lecture_to_and_more'),
+        ("notes", "0002_note_lecture_from_note_lecture_to_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='note',
-            options={'ordering': ['lecture_from', 'title']},
+            name="note",
+            options={"ordering": ["lecture_from", "title"]},
         ),
     ]

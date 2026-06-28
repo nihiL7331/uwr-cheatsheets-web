@@ -1,4 +1,4 @@
-{% extends "uwr_cheatsheets/base.html" %}
+{% extends "notes/base.html" %}
 
 {% block title %}Przedmioty - UWr Cheatsheets{% endblock %}
 
@@ -7,7 +7,7 @@
 {% if courses %}
 <ul>
     {% for course in courses %}
-    <li><a href="{% url 'uwr_cheatsheets:course_detail' course.pk %}">{{ course.name }}</a></li>
+    <li><a href="{% url 'notes:course_detail' course.pk %}">{{ course.name }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

@@ -1,9 +1,9 @@
-{% extends "uwr_cheatsheets/base.html" %}
+{% extends "notes/base.html" %}
 
 {% block title %}{{ course.name }} - UWr Cheatsheets{% endblock %}
 
 {% block content %}
-<p><a href="{% url 'uwr_cheatsheets:course_list' %}"> <- Wszystkie przedmioty</a></p>
+<p><a href="{% url 'notes:course_list' %}"> <- Wszystkie przedmioty</a></p>
 
 <h2>{{ course.name }}</h2>
 

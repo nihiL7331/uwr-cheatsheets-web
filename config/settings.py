@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "uwr_cheatsheets",
+    "notes",
 ]
 
 MIDDLEWARE = [
@@ -119,5 +119,5 @@ STATIC_URL = "static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGIN_REDIRECT_URL = "uwr_cheatsheets:course_list"
-LOGOUT_REDIRECT_URL = "uwr_cheatsheets:landing"
+LOGIN_REDIRECT_URL = "notes:course_list"
+LOGOUT_REDIRECT_URL = "notes:landing"
