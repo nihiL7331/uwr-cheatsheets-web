@@ -14,7 +14,7 @@
     <ul>
         {% for note in run.notes.all %}
         <li>
-            <a href="{{ note.pdf.url }}">{{ note.title }}</a>
+            <a href="{% url 'notes:note_reader' note.pk %}">{{ note.title }}</a>
             {% if note.lecture_from %}
             (wykłady {{ note.lecture_from }}
                 {% if note.lecture_to and note.lecture_to != note.lecture_from %}

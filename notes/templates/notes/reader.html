@@ -1,0 +1,50 @@
+{% extends "notes/base.html" %}
+{% load static %}
+
+{% block body_class %}reader-page{% endblock %}
+{% block title %}{{ current_note.title }} — {% endblock %}
+
+{% block content %}
+<div class="reader">
+    <div class="reader__backdrop"></div>
+
+    <aside class="reader__sidebar">
+        <div class="reader__sidebar-head">Przedmioty</div>
+        <nav>
+            {% for entry in tree %}
+            <details class="reader__course" {% if entry.course.pk == current_note.run.course.pk %}open{% endif %}>
+                <summary>{{ entry.course.name }}</summary>
+                {% for r in entry.runs %}
+                <div class="reader__run-label">{{ r.run.year_start }}/{{ r.run.year_start|add:1 }} {{ r.run.get_term_display }}</div>
+                {% for note in r.notes %}
+                <a class="reader__note {% if note.pk == current_note.pk %}is-active{% endif %}"
+                   href="{% url 'notes:note_reader' note.pk %}">{{ note.title }}</a>
+                {% endfor %}
+                {% endfor %}
+            </details>
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <div class="reader__main">
+        <div class="reader__toolbar">
+            <button type="button" class="reader__menu-btn" aria-label="Otwórz menu">☰</button>
+            <div class="reader__title">
+                <strong>{{ current_note.title }}</strong>
+                <span class="reader__meta">{{ current_note.run.course.name }}</span>
+            </div>
+            <div class="reader__actions">
+                <a class="btn btn--ghost" href="{{ current_note.pdf.url }}" download>Pobierz PDF</a>
+                <button type="button" class="btn btn--ghost" onclick="window.print()">Drukuj</button>
+            </div>
+        </div>
+        <div class="reader__content">
+            <iframe src="{{ current_note.pdf.url }}" title="{{ current_note.title }}"></iframe>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'notes/js/reader.js' %}"></script>
+{% endblock %}

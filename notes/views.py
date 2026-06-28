@@ -6,6 +6,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .forms import NoteUploadForm, Note
 from django.db.models import Prefetch
+from itertools import groupby
 
 
 def landing(req):
@@ -62,3 +63,29 @@ def register(req):
     else:
         form = UserCreationForm()
     return render(req, "registration/register.html", {"form": form})
+
+
+def note_reader(req, pk):
+    note = get_object_or_404(Note, pk=pk, status=Note.Status.APPROVED)
+
+    approved = (
+        Note.objects.filter(status=Note.Status.APPROVED)
+        .select_related("run", "run__course")
+        .order_by(
+            "run__course__name",
+            "-run__year_start",
+            "run__term",
+            "lecture_from",
+            "title",
+        )
+    )
+
+    tree = []
+    for course, course_notes in groupby(approved, key=lambda n: n.run.course):
+        runs = [
+            {"run": run, "notes": list(run_notes)}
+            for run, run_notes in groupby(course_notes, key=lambda n: n.run)
+        ]
+        tree.append({"course": course, "runs": runs})
+
+    return render(req, "notes/reader.html", {"current_note": note, "tree": tree})
