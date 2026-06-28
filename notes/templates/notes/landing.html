@@ -1,11 +1,11 @@
 {% extends "notes/base.html" %}
 
-{% block title %}UWr Cheatsheets - studenckie notatki{% endblock %}
+{% block title %}homepage - {% endblock %}
 
 {% block content %}
 <section class="hero">
     <div class="hero__inner">
-        <p class="hero__eyebrow">UWr Cheatsheets</p>
+        <p class="hero__eyebrow">{{ site_name }}</p>
         <h1 class="hero__title">Od studentów dla studentów.</h1>
         <div class="hero__actions">
             <a class="btn btn--primary" href="{% url 'notes:course_list' %}">Przeglądaj notatki</a>
