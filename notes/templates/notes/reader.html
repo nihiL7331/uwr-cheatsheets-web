@@ -33,6 +33,10 @@
     <div class="reader__main" id="reader-main">
         {% if current_note %}
             {% include "notes/_reader_main.html" %}
+        {% else %}
+        <div class="reader__toolbar">
+            <button type="button" class="reader__menu-btn" aria-label="Otwórz menu">☰</button>
+        </div>
         {% endif %}
     </div>
 </div>
