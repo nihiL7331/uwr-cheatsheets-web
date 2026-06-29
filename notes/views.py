@@ -68,6 +68,9 @@ def register(req):
 def note_reader(req, pk):
     note = get_object_or_404(Note, pk=pk, status=Note.Status.APPROVED)
 
+    if req.headers.get("HX-Request"):
+        return render(req, "notes/_reader_main.html", {"current_note": note})
+
     approved = (
         Note.objects.filter(status=Note.Status.APPROVED)
         .select_related("run", "run__course")
@@ -79,12 +82,11 @@ def note_reader(req, pk):
             "title",
         )
     )
-
     tree = []
     for course, course_notes in groupby(approved, key=lambda n: n.run.course):
         runs = [
-            {"run": run, "notes": list(run_notes)}
-            for run, run_notes in groupby(course_notes, key=lambda n: n.run)
+            {"run": run, "notes": list(rn)}
+            for run, rn in groupby(course_notes, key=lambda n: n.run)
         ]
         tree.append({"course": course, "runs": runs})
 
