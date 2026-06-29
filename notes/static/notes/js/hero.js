@@ -3,14 +3,14 @@
     const cursor = document.querySelector(".brand-cursor");
     if (!el) return;
 
-    const FINAL = "noted.";
+    const FINAL = "notiid.";
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         el.textContent = FINAL;
         return;
     }
 
-    const START = "notiid.";
+    const START = "noted.";
     const STOP = "not";
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const typing = (on) => cursor && cursor.classList.toggle("is-typing", on);
