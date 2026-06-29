@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 class NoteUploadForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ["run", "title", "pdf", "author", "lecture_from", "lecture_to"]
+        fields = ["run", "title", "pdf", "lecture_from", "lecture_to"]
 
     def clean_pdf(self):
         pdf = self.cleaned_data["pdf"]
