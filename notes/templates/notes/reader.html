@@ -31,7 +31,9 @@
     </aside>
 
     <div class="reader__main" id="reader-main">
-        {% include "notes/_reader_main.html" %}
+        {% if current_note %}
+            {% include "notes/_reader_main.html" %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

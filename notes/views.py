@@ -1,36 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, CourseRun
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from .forms import NoteUploadForm, Note
-from django.db.models import Prefetch
 from itertools import groupby
 
 
 def landing(req):
     return render(req, "notes/landing.html")
-
-
-def course_list(req):
-    courses = Course.objects.order_by("name")
-    return render(req, "notes/course_list.html", {"courses": courses})
-
-
-def course_detail(req, pk):
-    course = get_object_or_404(Course, pk=pk)
-    approved = Note.objects.filter(status=Note.Status.APPROVED)
-    runs = (
-        CourseRun.objects.filter(course=course)
-        .order_by("-year_start", "term")
-        .prefetch_related(Prefetch("notes", queryset=approved))
-    )
-    return render(
-        req,
-        "notes/course_detail.html",
-        {"course": course, "runs": runs},
-    )
 
 
 @login_required
@@ -47,7 +25,7 @@ def upload_note(req):
                 note.status = Note.Status.PENDING
                 messages.success(req, "Notatka oczekuje na zatwierdzenie.")
             note.save()
-            return redirect("notes:course_detail", pk=note.run.course.pk)
+            return redirect("notes:reader_home", pk=note.run.course.pk)
     else:
         form = NoteUploadForm()
     return render(req, "notes/upload_note.html", {"form": form})
@@ -59,18 +37,13 @@ def register(req):
         if form.is_valid():
             user = form.save()
             login(req, user)
-            return redirect("notes:course_list")
+            return redirect("notes:reader_home")
     else:
         form = UserCreationForm()
     return render(req, "registration/register.html", {"form": form})
 
 
-def note_reader(req, pk):
-    note = get_object_or_404(Note, pk=pk, status=Note.Status.APPROVED)
-
-    if req.headers.get("HX-Request"):
-        return render(req, "notes/_reader_main.html", {"current_note": note})
-
+def _approved_tree():
     approved = (
         Note.objects.filter(status=Note.Status.APPROVED)
         .select_related("run", "run__course")
@@ -90,4 +63,21 @@ def note_reader(req, pk):
         ]
         tree.append({"course": course, "runs": runs})
 
+    return tree
+
+
+def note_reader(req, pk):
+    note = get_object_or_404(Note, pk=pk, status=Note.Status.APPROVED)
+
+    if req.headers.get("HX-Request"):
+        return render(req, "notes/_reader_main.html", {"current_note": note})
+
+    tree = _approved_tree()
+
     return render(req, "notes/reader.html", {"current_note": note, "tree": tree})
+
+
+def reader_home(req):
+    tree = _approved_tree()
+
+    return render(req, "notes/reader.html", {"current_note": None, "tree": tree})

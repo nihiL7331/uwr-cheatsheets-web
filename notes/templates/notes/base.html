@@ -12,7 +12,7 @@
     <header>
         <h1><a href="{% url 'notes:landing' %}">{{ site_name }}</a></h1>
         <nav>
-                <a href="{% url 'notes:course_list' %}">Przeglądaj</a>
+                <a href="{% url 'notes:reader_home' %}">Przeglądaj</a>
                 {% if user.is_authenticated %}
                     <span>{{ user.username }}</span>
                     <a href="{% url 'notes:upload_note' %}">Dodaj notatkę</a>

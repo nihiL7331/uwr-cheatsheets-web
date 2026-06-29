@@ -123,5 +123,5 @@ STATIC_URL = "static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGIN_REDIRECT_URL = "notes:course_list"
+LOGIN_REDIRECT_URL = "notes:reader_home"
 LOGOUT_REDIRECT_URL = "notes:landing"
