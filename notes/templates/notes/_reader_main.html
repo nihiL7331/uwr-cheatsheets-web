@@ -2,7 +2,9 @@
     <button type="button" class="reader__menu-btn" aria-label="Otwórz menu">☰</button>
     <div class="reader__title">
         <strong>{{ current_note.title }}</strong>
-        <span class="reader__meta">{{ current_note.run.course.name }}</span>
+        <span class="reader__meta">
+            {{ current_note.run.course.name }}{% if current_note.display_author %} · {{ current_note.display_author }}{% endif %}
+        </span>
     </div>
     <div class="reader__actions">
         <a class="btn btn--ghost" href="{{ current_note.pdf.url }}" download>Pobierz PDF</a>

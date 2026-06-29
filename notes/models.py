@@ -36,6 +36,14 @@ class Note(models.Model):
         APPROVED = "approved", "Zatwierdzona"
         REJECTED = "rejected", "Odrzucona"
 
+    @property
+    def display_author(self):
+        if self.author:
+            return self.author
+        if self.uploaded_by:
+            return self.uploaded_by.get_full_name() or self.uploaded_by.username
+        return ""
+
     run = models.ForeignKey(CourseRun, on_delete=models.CASCADE, related_name="notes")
     title = models.CharField(max_length=200)
     lecture_from = models.PositiveSmallIntegerField(null=True, blank=True)

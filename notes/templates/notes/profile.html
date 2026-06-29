@@ -1,0 +1,12 @@
+{% extends "notes/base.html" %}
+{% block title %}Profil — {% endblock %}
+{% block content %}
+<div style="max-width: 480px; margin: var(--space-4) auto; padding: 0 var(--space-3);">
+    <h2>Twój profil</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn--primary">Zapisz</button>
+    </form>
+</div>
+{% endblock %}

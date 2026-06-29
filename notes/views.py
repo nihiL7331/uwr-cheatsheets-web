@@ -1,9 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
-from .forms import NoteUploadForm, Note
+from .forms import NoteUploadForm, Note, RegisterForm, ProfileForm
 from itertools import groupby
 
 
@@ -31,15 +30,32 @@ def upload_note(req):
     return render(req, "notes/upload_note.html", {"form": form})
 
 
+@login_required
+def profile(req):
+    if req.method == "POST":
+        form = ProfileForm(req.POST, instance=req.user)
+        if form.is_valid():
+            form.save()
+            messages.success(req, "Zapisano zmiany.")
+            return redirect("notes:profile")
+    else:
+        form = ProfileForm(instance=req.user)
+    return render(req, "notes/profile.html", {"form": form})
+
+
 def register(req):
     if req.method == "POST":
-        form = UserCreationForm(req.POST)
+        form = RegisterForm(req.POST)
         if form.is_valid():
             user = form.save()
             login(req, user)
+            messages.success(
+                req,
+                f"Witaj, {user.get_full_name() or user.username}! Konto zostalo utworzone.",
+            )
             return redirect("notes:reader_home")
     else:
-        form = UserCreationForm()
+        form = RegisterForm()
     return render(req, "registration/register.html", {"form": form})
 
 
