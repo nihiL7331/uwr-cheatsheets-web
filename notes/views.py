@@ -24,7 +24,7 @@ def upload_note(req):
                 note.status = Note.Status.PENDING
                 messages.success(req, "Notatka oczekuje na zatwierdzenie.")
             note.save()
-            return redirect("notes:reader_home", pk=note.run.course.pk)
+            return redirect("notes:note_reader", pk=note.run.course.pk)
     else:
         form = NoteUploadForm()
     return render(req, "notes/upload_note.html", {"form": form})
