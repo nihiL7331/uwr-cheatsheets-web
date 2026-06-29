@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body_class %}reader-page{% endblock %}
-{% block title %}{{ current_note.title }} — {% endblock %}
+{% block title %}{{ current_note.title }} - {% endblock %}
 
 {% block content %}
 <div class="reader">
@@ -35,7 +35,7 @@
             </div>
             <div class="reader__actions">
                 <a class="btn btn--ghost" href="{{ current_note.pdf.url }}" download>Pobierz PDF</a>
-                <button type="button" class="btn" onclick="window.print()">Drukuj</button>
+                <button type="button" class="btn" id="print-btn">Drukuj</button>
             </div>
         </div>
         <div class="reader__content" id="pdf-scroll" data-pdf-url="{{ current_note.pdf.url }}">
@@ -90,5 +90,22 @@
         }
         render();
     }
+
+    document.getElementById("print-btn")?.addEventListener("click", () => {
+        const url = scroller.dataset.pdfUrl;
+        const frame = document.createElement("iframe");
+        frame.style.position = "fixed";
+        frame.style.right = "0";
+        frame.style.bottom = "0";
+        frame.style.width = "0";
+        frame.style.height = "0";
+        frame.style.border = "0";
+        frame.src = url;
+        document.body.appendChild(frame);
+        frame.onload = () => {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+        };
+    });
 </script>
 {% endblock %}
