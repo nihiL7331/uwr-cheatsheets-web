@@ -1,18 +1,27 @@
 {% extends "notes/base.html" %}
+{% load static %}
 
 {% block title %}homepage - {% endblock %}
 
 {% block content %}
 <section class="hero">
-    <div class="hero__inner">
-        <p class="hero__eyebrow">{{ site_name }}</p>
-        <h1 class="hero__title">Od studentów dla studentów.</h1>
+    <canvas class="hero__bg" id="hero-bg" aria-hidden="true"></canvas>
+    <div class="hero__brand">
+        <span id="brand-text" class="brand-word">noted.</span><span class="brand-cursor" aria-hidden="true"></span>
+    </div>
+    <div class="hero__side">
+        <p class="hero__tagline">Od studentów dla studentów.</p>
         <div class="hero__actions">
-            <a class="btn btn--primary" href="{% url 'notes:reader_home' %}">Przeglądaj notatki</a>
+            <a class="btn btn--primary btn--lg" href="{% url 'notes:reader_home' %}">Przeglądaj notatki</a>
             {% if not user.is_authenticated %}
-            <a class="btn btn--ghost" href="{% url 'notes:register' %}">Dołącz</a>
+            <a class="btn btn--ghost btn--lg" href="{% url 'notes:register' %}">Dołącz</a>
             {% endif %}
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'notes/js/hero.js' %}"></script>
+<script src="{% static 'notes/js/hero-bg.js' %}"></script>
 {% endblock %}

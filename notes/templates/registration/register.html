@@ -3,10 +3,17 @@
 {% block title %}Rejestracja - {% endblock %}
 
 {% block content %}
-<h2>Rejestracja</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Zarejestruj się</button>
-</form>
+<div class="form-page">
+    <div class="card">
+        <h2 class="form-page__title">Rejestracja</h2>
+        <form method="post" class="styled-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn--primary btn--block">Zarejestruj się</button>
+        </form>
+        <p style="margin-top: var(--space-3); font-size: 0.85rem; color: var(--text-dim);">
+            Masz już konto? <a href="{% url 'login' %}">Zaloguj się</a>
+        </p>
+    </div>
+</div>
 {% endblock %}

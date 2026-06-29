@@ -3,10 +3,14 @@
 {% block title %}Dodaj notatkę - {% endblock %}
 
 {% block content %}
-<h2>Dodaj notatkę</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Prześlij</button>
-</form>
+<div class="form-page">
+    <div class="card">
+        <h2 class="form-page__title">Dodaj notatkę</h2>
+        <form method="post" enctype="multipart/form-data" class="styled-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn--primary btn--block">Prześlij</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

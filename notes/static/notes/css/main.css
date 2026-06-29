@@ -8,6 +8,8 @@
 
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, monospace;
+  --accent-soft: color-mix(in srgb, var(--accent) 25%, transparent);
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -35,21 +37,46 @@ body {
 body.reader-page { height: 100svh; overflow: hidden; }
 
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
-header h1 { font-size: 1.15rem; margin: 0; }
-header nav { display: flex; align-items: center; gap: var(--space-3); }
+header .brand {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+}
+header .brand:hover { text-decoration: none; }
+header nav { display: flex; align-items: center; gap: var(--space-2); }
+header nav a {
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+    transition: color 0.15s, background 0.15s;
+}
+header nav a:hover { color: var(--text); background: var(--surface); text-decoration: none; }
+header nav .nav-user {
+    font-weight: 600; color: var(--text);
+    padding: var(--space-1) var(--space-2);
+}
 header nav button {
-  background: none; border: none; color: var(--accent);
-  font: inherit; cursor: pointer; padding: 0;
+    background: none; border: none; color: var(--text-dim);
+    font: inherit; cursor: pointer; padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius); transition: color 0.15s, background 0.15s;
 }
-header nav button:hover { text-decoration: underline; }
+header nav button:hover { color: var(--text); background: var(--surface); }
 
 main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
@@ -72,34 +99,51 @@ a:hover { text-decoration: underline; }
 
 .hero {
     flex: 1;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    padding: var(--space-5) var(--space-3);
-}
-.hero__inner { max-width: 760px; }
-.hero__eyebrow {
-    color: var(--accent);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    margin: 0 0 var(--space-3);
-}
-.hero__title {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 8vw, 5.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    font-weight: 800;
-    margin: 0 0 var(--space-3);
-}
-.hero__actions {
     display: flex;
-    gap: var(--space-3);
+    align-items: center;
     justify-content: center;
+    gap: clamp(var(--space-4), 8vw, var(--space-5));
     flex-wrap: wrap;
+    padding: var(--space-5) var(--space-4);
 }
+.hero__brand {
+    font-family: var(--font-mono);
+    font-size: clamp(3rem, 11vw, 7rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+.hero__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    max-width: 320px;
+}
+.hero__tagline {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.4;
+}
+.hero__actions { display: flex; flex-direction: column; gap: var(--space-3); width: 100%; }
+.hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;   
+}
+
+.btn--lg {
+    padding: var(--space-3) var(--space-4);
+    font-size: 1.1rem;
+    border-radius: calc(var(--radius) + 2px);
+}
+.hero__actions .btn--lg { width: 100%; }
 
 .reader {
     flex: 1;
@@ -249,3 +293,59 @@ canvas.pdf-page {
     .toast { transition: opacity 0.2s ease; transform: none; }
     .toast.is-leaving { transform: none; }
 }
+
+.brand-word {
+    font-family: var(--font-mono);
+    letter-spacing: -0.03em;
+}
+.brand-cursor {
+    display: inline-block;
+    width: 0.055em;
+    height: 0.85em;
+    margin-left: 0.05em;
+    background: var(--accent);
+    vertical-align: baseline;
+    animation: cursor-blink 1.1s step-end infinite;
+}
+.brand-cursor.is-typing { animation: none; opacity: 1; }
+@keyframes cursor-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
+
+.form-page { max-width: 440px; width: 100%; margin: var(--space-5) auto; padding: 0 var(--space-3); }
+.form-page__title { margin: 0 0 var(--space-4); font-size: 1.5rem; }
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+}
+
+.styled-form p { margin: 0 0 var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
+.styled-form label { font-size: 0.85rem; font-weight: 600; color: var(--text-dim); }
+.styled-form input[type="text"],
+.styled-form input[type="password"],
+.styled-form input[type="email"],
+.styled-form input[type="number"],
+.styled-form input[type="file"],
+.styled-form select,
+.styled-form textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--space-2) var(--space-3);
+    color: var(--text);
+    font: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.styled-form input:focus, .styled-form select:focus, .styled-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.styled-form .helptext { font-size: 0.78rem; color: var(--text-dim); }
+.styled-form .errorlist { margin: var(--space-1) 0 0; padding-left: 1.1em; color: #ff6b6b; font-size: 0.8rem; }
+.btn--block { display: block; width: 100%; text-align: center; }

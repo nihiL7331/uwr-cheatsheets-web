@@ -10,11 +10,11 @@
 </head>
     <body class="{% block body_class %}{% endblock %}">
     <header>
-        <h1><a href="{% url 'notes:landing' %}">{{ site_name }}</a></h1>
+        <h1 style="margin:0;"><a class="brand" href="{% url 'notes:landing' %}">{{ site_name }}</a></h1>
         <nav>
                 <a href="{% url 'notes:reader_home' %}">Przeglądaj</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'notes:profile' %}">{{ user.get_full_name|default:user.username }}</a>
+                    <a class="nav-user" href="{% url 'notes:profile' %}">{{ user.get_full_name|default:user.username }}</a>
                     <a href="{% url 'notes:upload_note' %}">Dodaj notatkę</a>
                     <form method="post" action="{% url 'logout' %}" style="display:inline">
                         {% csrf_token %}
