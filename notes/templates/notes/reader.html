@@ -38,8 +38,8 @@
                 <button type="button" class="btn" onclick="window.print()">Drukuj</button>
             </div>
         </div>
-        <div class="reader__content">
-            <iframe src="{{ current_note.pdf.url }}" title="{{ current_note.title }}"></iframe>
+        <div class="reader__content" id="pdf-scroll" data-pdf-url="{{ current_note.pdf.url }}">
+            <div id="pdf-pages"></div>
         </div>
     </div>
 </div>
@@ -47,4 +47,48 @@
 
 {% block extra_js %}
 <script src="{% static 'notes/js/reader.js' %}"></script>
+<script type="module">
+    import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.worker.min.mjs";
+
+    const scroller = document.getElementById("pdf-scroll");
+    const pagesEl = document.getElementById("pdf-pages");
+
+    if (scroller && pagesEl) {
+        const url = scroller.dataset.pdfUrl;
+        const dpr = window.devicePixelRatio || 1;
+
+        async function render() {
+            try {
+                const pdf = await pdfjsLib.getDocument(url).promise;
+                for (let n = 1; n <= pdf.numPages; n++) {
+                    const page = await pdf.getPage(n);
+                    const targetWidth = pagesEl.clientWidth || 800;
+                    const unscaled = page.getViewport({ scale: 1 });
+                    const viewport = page.getViewport({ scale: targetWidth / unscaled.width });
+
+                    const canvas = document.createElement("canvas");
+                    canvas.className = "pdf-page";
+                    canvas.width = Math.floor(viewport.width * dpr);
+                    canvas.height = Math.floor(viewport.height * dpr);
+                    canvas.style.width = "100%";
+                    canvas.style.height = "auto";
+
+                    const ctx = canvas.getContext("2d");
+                    ctx.scale(dpr, dpr);
+                    pagesEl.appendChild(canvas);
+
+                    await page.render({ canvasContext: ctx, viewport }).promise;
+                }
+            } catch (err) {
+                pagesEl.innerHTML =
+                    '<p style="padding:2rem;color:var(--text-dim)">Nie udało się wczytać PDF: ' +
+                    err.message + '</p>';
+                console.error("PDF render failed:", err);
+            }
+        }
+        render();
+    }
+</script>
 {% endblock %}
